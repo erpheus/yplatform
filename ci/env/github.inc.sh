@@ -18,7 +18,7 @@ function sf_ci_env_github() {
     CI_IS_PR=
     [[ "${GITHUB_EVENT_NAME:-}" != "pull_request" ]] || CI_IS_PR=true
 
-    CI_JOB_ID= #$(${SUPPORT_FIRECLOUD_DIR}/bin/github-get-job-id)
+    CI_JOB_ID=$(${SUPPORT_FIRECLOUD_DIR}/bin/github-get-job-id)
     CI_PIPELINE_ID=${GITHUB_RUN_ID:-}
     # CI_JOB_URL="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/commit/${GITHUB_SHA}/checks?check_suite_id=FIXME"
     CI_JOB_URL="${GITHUB_SERVER_URL:-}/${CI_REPO_SLUG}/runs/${CI_JOB_ID}?check_suite_focus=true"
@@ -29,19 +29,14 @@ function sf_ci_env_github() {
     CI_PR_GIT_HASH=
     CI_PR_GIT_BRANCH=
     [[ "${CI_IS_PR}" != "true" ]] || {
-        [[ -e "${GITHUB_EVENT_PATH:-}" ]] || \
-            CI_PR_URL=$(jq -r .github.event.pull_request.url ${GITHUB_EVENT_PATH:-})
-        [[ -e "${GITHUB_EVENT_PATH:-}" ]] || \
-            CI_PR_REPO_SLUG=$(jq -r .github.event.pull_request.head.repo.full_name ${GITHUB_EVENT_PATH:-})
-        [[ -e "${GITHUB_EVENT_PATH:-}" ]] || \
-            CI_PR_GIT_HASH=$(jq -r .github.event.pull_request.head.sha ${GITHUB_EVENT_PATH:-})
-        [[ -e "${GITHUB_EVENT_PATH:-}" ]] || \
-            CI_PR_GIT_BRANCH=$(jq -r .github.event.pull_request.head.ref ${GITHUB_EVENT_PATH:-})
+        CI_PR_URL=$(jq -r .github.event.pull_request.url ${GITHUB_EVENT_PATH})
+        CI_PR_REPO_SLUG=$(jq -r .github.event.pull_request.head.repo.full_name ${GITHUB_EVENT_PATH})
+        CI_PR_GIT_HASH=$(jq -r .github.event.pull_request.head.sha ${GITHUB_EVENT_PATH})
+        CI_PR_GIT_BRANCH=$(jq -r .github.event.pull_request.head.ref ${GITHUB_EVENT_PATH})
     }
 
     CI_GIT_HASH=${GITHUB_SHA:-}
     CI_GIT_BRANCH=
-    GITHUB_REF=${GITHUB_REF:-}
     [[ ! "${GITHUB_REF:-}" =~ ^refs/heads/ ]] || CI_GIT_BRANCH=${GITHUB_REF#refs/heads/}
     CI_GIT_TAG=
     [[ ! "${GITHUB_REF:-}" =~ ^refs/tags/ ]] || CI_GIT_TAG=${GITHUB_REF#refs/tags/}
@@ -50,7 +45,7 @@ function sf_ci_env_github() {
 }
 
 function sf_ci_printvars_github() {
-    compgen -A variable | sort -u | grep \
+    printenv | grep \
         -e "^CI[=_]" \
         -e "^GITHUB[=_]" \
         -e "^RUNNER[=_]"
