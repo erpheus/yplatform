@@ -67,10 +67,10 @@ if (sfCompat) {
         return value;
     });
 
-    if (data.CI_PLATFORM === 'appveyor') {
-        data.CI_JOB_ID=process.env.APPVEYOR_JOB_ID;
-        data.CI_PIPELINE_ID=process.env.APPVEYOR_BUILD_NUMBER;
-        data.CI_JOB_URL=_.join([
+    if (data.SF_CI_PLATFORM === 'appveyor') {
+        data.SF_CI_JOB_ID=process.env.APPVEYOR_JOB_ID;
+        data.SF_CI_PIPELINE_ID=process.env.APPVEYOR_BUILD_NUMBER;
+        data.SF_CI_JOB_URL=_.join([
             'https://ci.appveyor.com/project/',
             process.env.APPVEYOR_ACCOUNT_NAME,
             '/',
@@ -78,7 +78,7 @@ if (sfCompat) {
             '/build/job/',
             process.env.APPVEYOR_JOB_ID
         ], '');
-        data.CI_PIPELINE_URL=_.join([
+        data.SF_CI_PIPELINE_URL=_.join([
             'https://ci.appveyor.com/project/',
             process.env.APPVEYOR_ACCOUNT_NAME,
             '/',
