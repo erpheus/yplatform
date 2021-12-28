@@ -13,7 +13,7 @@ meta:
   bitrise.io:
     stack: linux-docker-android-20.04
     machine_type_id: standard
-    docker_image: homebrew/ubuntu20.04:3.2.8
+    # docker_image: homebrew/ubuntu20.04:3.2.8
 workflows:
   primary:
     envs:
