@@ -5,15 +5,7 @@ set -euo pipefail
 # keep in sync with dockerfiles/yp-ubuntu-*/Dockerfile.build.sh
 
 YP_DIR=/yplatform
-echo debug1
-id -u
-id -g
-echo $USER
-whoami
-declare -p
 source ${YP_DIR}/dockerfiles/util/common.inc.sh
-echo debug2
-declare -p
 # shellcheck disable=SC2034
 UNAME=codeship
 # shellcheck disable=SC2034
