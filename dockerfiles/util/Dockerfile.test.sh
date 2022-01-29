@@ -7,7 +7,9 @@ source ${YP_DIR}/dockerfiles/util/common.inc.sh
 
 [[ $# -gt 0 ]] || {
     # shellcheck disable=SC1091
+    echo UNAME=${UNAME:-}
     [[ -n "${UNAME:-}" ]] || UNAME=$(source ${YP_DIR}/dockerfiles/util/env.inc.sh && echo "${UNAME}")
+    echo UNAME=${UNAME:-}
     BASH=$(command -v bash)
 
     echo_do "Test root user config..."
