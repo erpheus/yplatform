@@ -56,9 +56,17 @@ function apt_install_one() {
     echo_do "aptitude: Installing ${PKG}..."
     if [[ -n "${YP_SUDO:-}" ]]; then
         ${YP_SUDO:-} --preserve-env --set-home \
-            apt-get -y "${APT_GET_FORCE_YES[@]}" "${APT_DPKG[@]}" install ${PKG}
+            apt-get -y "${APT_GET_FORCE_YES[@]}" "${APT_DPKG[@]}" install ${PKG} || {
+                echo_err "apt-get install failed. Running with -o Debug::pkgProblemResolver=true for more info."
+                ${YP_SUDO:-} --preserve-env --set-home \
+                    apt-get -o Debug::pkgProblemResolver=true -y "${APT_GET_FORCE_YES[@]}" "${APT_DPKG[@]}" install ${PKG}
+        }
+
     else
-        apt-get -y "${APT_GET_FORCE_YES[@]}" "${APT_DPKG[@]}" install ${PKG}
+        apt-get -y "${APT_GET_FORCE_YES[@]}" "${APT_DPKG[@]}" install ${PKG} ||  {
+            echo_err "apt-get install failed. Running with -o Debug::pkgProblemResolver=true for more info."
+            apt-get -o Debug::pkgProblemResolver=true -y "${APT_GET_FORCE_YES[@]}" "${APT_DPKG[@]}" install ${PKG}
+        }
     fi
     echo_done
     hash -r # see https://github.com/Homebrew/brew/issues/5013
